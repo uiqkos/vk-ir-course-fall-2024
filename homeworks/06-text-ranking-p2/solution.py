@@ -20,7 +20,7 @@ from nltk.tokenize import word_tokenize
 from pandarallel import pandarallel
 from tqdm import tqdm
 
-pandarallel.initialize()
+pandarallel.initialize(use_memory_fs=False)
 nltk.download('punkt')
 nltk.download('stopwords')
 morph = pymorphy2.MorphAnalyzer()
@@ -136,8 +136,8 @@ class StatisticItem:
 class BM25RankerConfig:
     k1: float = 1.2
     b: float = 0.75
-    nc: float = 0.8
-    title_w: float = 0.9
+    nc: float = 0.4
+    title_w: float = 0.3
     body_w: float = 0.7
 
 
@@ -231,7 +231,7 @@ class BM25Ranker:
                 tf = doc_stats.term_freq(term)
                 l = (idf * tf * (k1 + 1) /
                      (tf + k1 * (1 - b + b *
-                                 doc_stats.doc_length / avg_len)))
+                                 doc_stats.doc_length / avg_doc_length)))
 
                 score += l
 
